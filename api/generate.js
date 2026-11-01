@@ -12,7 +12,11 @@ export default async function handler(req, res) {
       method: "POST", headers: { "Content-Type": "application/json", "x-goog-api-key": apiKey },
       body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }], generationConfig: { responseMimeType: "application/json", temperature: 0.9, maxOutputTokens: 3500 } })
     });
-    if (!response.ok) { console.error("Gemini request failed:", response.status); return res.status(502).json({ error: "AI request failed" }); }
+    if (!response.ok) {
+  const errorText = await response.text();
+  console.error("Gemini request failed:", response.status, errorText);
+  return res.status(502).json({ error: "AI request failed" });
+    }
     const result = await response.json();
     const text = result.candidates?.[0]?.content?.parts?.map(p => p.text || "").join("");
     if (!text) return res.status(502).json({ error: "Empty AI response" });

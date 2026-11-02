@@ -8,7 +8,7 @@ export default async function handler(req, res) {
       return res.status(400).json({ error: "Enter a valid topic" });
     const safeCount = [5, 8, 10].includes(Number(count)) ? Number(count) : 8;
     const prompt = `You are BUEBOY'S ASSISTANT V3, a creative editing-ideas assistant. Generate exactly ${safeCount} distinct original video-edit concepts. Category: ${String(category || "General").slice(0,60)}. Topic: ${topic.trim()}. Style: ${String(style || "Cinematic").slice(0,100)}. Extra details: ${String(extra || "None").slice(0,500)}. For each idea give a catchy title and useful concept including visuals, mood, transitions/scene progression, and suitable music vibe when relevant. Make each idea meaningfully different and practical. Do not claim to create actual video files. Return only valid JSON in this format: {"ideas":["Title: concept..."]}`;
-    const response = await fetch("https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent", {
+    const response = await fetch("https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent", {
       method: "POST", headers: { "Content-Type": "application/json", "x-goog-api-key": apiKey },
       body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }], generationConfig: { responseMimeType: "application/json", temperature: 0.9, maxOutputTokens: 3500 } })
     });
